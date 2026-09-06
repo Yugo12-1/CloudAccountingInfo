@@ -1,0 +1,112 @@
+
+
+
+CREATE DATABASE cloud_accounting_master;
+
+USE cloud_accounting_master;
+
+CREATE TABLE tbl_administrator (
+	HospitalID VARCHAR(30) PRIMARY KEY,
+	HospitalName VARCHAR(50),
+	GroupID VARCHAR(30),
+	LoginID varchar(30),
+	LoginPassword varchar(255),
+	DBName varchar(30),
+	DBUser varchar(20),
+	DBPassword varchar(100)
+);
+
+SELECT * FROM tbl_administrator;
+
+DROP USER IF EXISTS 'admin'@'localhost';
+
+CREATE USER 'admin'@'localhost' IDENTIFIED BY 'admin1201'
+
+GRANT ALL PRIVILEGES ON cloud_accounting_master.* TO 'admin'@'localhost'
+
+
+
+
+INSERT INTO tbl_administrator
+(
+	HospitalID,
+	HospitalName,
+	GroupID,
+	LoginID,
+	LoginPassword,
+	DBName,
+	DBUser,
+	DBPassword
+)
+VALUES (
+	'0000000001',
+	'松田クリニック',
+	'0000000001',
+	'matsuda',
+	'$2y$12$bVYiC0HXWn86HTMIWX1yau0EMqGIzIvRDMu4UMNqKeo9YwmPk/NhC',
+	'clinic_matsuda_db',
+	'matsuda',
+	'matsuda'
+)
+
+
+
+CREATE DATABASE clinic_matsuda_db;
+
+USE clinic_matsuda_db;
+
+
+CREATE TABLE tbl_accounting (
+	SID varchar(50) PRIMARY KEY,
+	YMD date,
+	Hhmmss time,
+	KID varchar(20),
+	Department varchar(20),
+	Nyugai varchar(5),
+	HokenGaku int,
+	JihiGaku int,
+	Gokei int,
+	PayKind varchar(20)
+);
+
+SELECT * FROM tbl_accounting;
+
+
+CREATE USER 'matsuda'@'localhost' IDENTIFIED BY 'matsuda'
+
+GRANT ALL PRIVILEGES ON clinic_matsuda_db.* TO 'matsuda'@'localhost';
+
+ALTER TABLE tbl_accounting
+ADD COLUMN HokenKind varchar(10) AFTER Department;
+
+
+
+INSERT INTO tbl_accounting
+VALUES (
+	'00000000001',
+	'2026-09-04',
+	'09:00:00',
+	'000001',
+	'内科',
+	'国保',
+	'外来',
+	1000,
+	0,
+	1000,
+	'現金'
+);
+
+INSERT INTO tbl_accounting
+VALUES (
+	'00000000007',
+	'2026-09-03',
+	'12:00:00',
+	'0000010',
+	'皮膚科',
+	'社保',
+	'外来',
+	500,
+	0,
+	500,
+	'現金'
+);
