@@ -1,0 +1,18 @@
+{
+    "HospitalID": "0000000001",
+    "Accountings": [
+        {
+            "SID": "000000000020",
+            "YMD": "2026/09/21",
+            "Hhmmss": "10:30:30",
+            "KID": "000021",
+            "Department": "眼科",
+            "HokenKind": "社保",
+            "Nyugai": "入院",
+            "HokenGaku": 100000,
+            "JihiGaku": 3000,
+            "Gokei": 103000,
+            "PayKind": "現金"
+        }
+    ]
+}

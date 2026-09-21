@@ -1,0 +1,276 @@
+html,
+body {
+ height: 100%;
+}
+
+body {
+ margin: 0px;
+ display: flex;
+ flex-direction: column;
+}
+
+.site-header {
+ height: 40px;
+ flex-shrink: 0;
+ background-color: #e9ecef;
+}
+
+.header-content {
+ height: 100%;
+ display: flex;
+ align-items: center;
+ padding: 0 20px;
+ box-sizing: border-box;
+}
+
+.header-content img {
+ width: 120px;
+ height: auto;
+ max-height: 32px;
+ object-fit: contain;
+}
+
+.accounting-area {
+ flex: 1;
+ display: flex;
+ justify-content: center;
+ background-color: #f8f9fa;
+ box-sizing: border-box;
+}
+
+
+.accounting-header h1 {
+ font-size: 28px;
+ color: #334155;
+ font-weight: bold;
+}
+
+
+.accounting-content {
+ width: 95%;
+ max-width: 1400px;
+ margin: 0 auto;
+}
+
+.accounting-table td {
+ padding: 2px 5px;
+}
+
+.site-footer {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ height: 30px;
+ background-color: #e9ecef;
+}
+
+/*  
+===============================
+   検索エリア
+===============================
+*/
+
+.search-panel {
+ width: 100%;
+ background-color: #ffffff;
+ border: 1px solid #e2e8f0;
+ border-radius: 10px;
+ padding: 24px 28px;
+ box-sizing: border-box;
+ margin-bottom: 30px;
+   }
+
+.search-panel-title {
+ margin-bottom: 20px;
+}   
+
+.search-panel-title h2 {
+ margin: 0;
+ font-size: 18px;
+ color: #334155;
+ font-weight: bold;
+}   
+   
+.search-form {
+ display: flex;
+ align-items: flex-end;
+ flex-wrap: wrap;
+ gap: 20px;
+}   
+
+
+.search-item {
+ display: flex;
+ flex-direction: column;
+ gap: 7px;
+}
+
+.search-item select,
+.search-item input[type="date"] {
+ height: 30px;
+ box-sizing: border-box;
+ padding: 0 10px;
+ 
+ border: 1px solid #cbd5e1;
+ border-radius: 6px;
+ 
+ background-color: #ffffff;
+ color: #334155;
+ 
+ font-size: 14px;
+}
+
+.date-inputs {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+}
+
+
+.search-item select {
+ width: 90px;
+}
+
+.search-item select[name="payKind"] {
+ width: 160px;
+}
+
+.date-inputs input[type="date"] {
+ width: 130px;
+}
+
+.search-item label {
+ font-size: 16px;
+ font-weight: bold;
+ color: #475569;
+}
+
+
+.search-buttons {
+ display: flex;
+ align-items: center;
+ gap: 10px;
+}
+
+
+.search-buttons button {
+ height: 30px;
+ padding: 0 20px;
+ 
+ border: none;
+ border-radius: 6px;
+ 
+ background-color: #1d4ed8;
+ color:  #ffffff;
+ 
+ font-size: 14px;
+ font-weight: bold;
+ 
+ cursor: pointer;
+}
+
+.search-buttons button:hover {
+ background-color: #1e40af;
+}
+
+.search-buttons a {
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ 
+ height: 30px;
+ padding: 0 16px;
+ box-sizing: border-box;
+ 
+ border: 1px solid #cbd5e1;
+ border-radius: 6px;
+ 
+ background-color: #ffffff;
+ color: #475569;
+ 
+ font-size: 14px;
+ font-weight: bold;
+ text-decoration: none;
+}
+
+.search-buttons a:hover {
+ background-color: #f1f5f9;
+}
+
+
+.result-count {
+ margin-top: 10px;
+ text-align: right;
+ color: #334155;
+ font-size: 16px;
+ font-weight: bold;
+}
+
+/*
+===============================
+   会計情報テーブル   
+===============================
+*/
+
+.accounting-table {
+ width: 100%;
+ border-collapse: collapse;
+ background-color: #ffffff;
+}
+
+.accounting-table th,
+.accounting-table td {
+ border: 1px solid #64748b;
+}
+
+.accounting-table th {
+ background-color: #f1f5f9;
+ color: #334155;
+ font-weight: bold;
+ padding: 10px 12px;
+}
+
+.accounting-table .number {
+ text-align: right;
+}
+
+.accounting-table .item {
+ text-align: right;
+}
+
+.total-amount {
+ font-weight: bold;
+}
+
+
+/*
+===============================
+  ログアウト
+===============================
+*/
+
+.logout-form {
+ margin-top: 100px;
+ margin-bottom: 50px;
+ display: flex;
+ justify-content: center;
+}
+
+
+.logout-form button {
+ width: 100px;
+ height: 36px;
+ font-size: 14px;
+ font-weight: bold;
+ cursor: pointer;
+ border-radius: 6px;
+ border: none;
+ 
+ border: 1px solid #94a3b8; /* 少し濃いグレーの枠線 */
+ background-color: #f8fafc; /* ごく薄いグレーの背景 */
+ color: #334155;          /* ヘッダーや文字と同じ濃いめのスレート色 */
+}
+
+.logout-form button:hover {
+ background-color: #e2e8f0; /* ホバー時は少し色を濃くする */
+}
