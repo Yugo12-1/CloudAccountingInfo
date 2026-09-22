@@ -53,3 +53,6 @@ CREATE USER 'ca_matsuda_app'@'localhost'
 IDENTIFIED BY 'matsuda';
 
 
+
+他もそうなので。
+JSONファイルのキー名はUppaer Cammel caseとします。
