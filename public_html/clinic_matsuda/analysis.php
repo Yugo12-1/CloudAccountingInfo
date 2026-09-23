@@ -8,7 +8,7 @@
         <script src="../js/analysis.js" defer></script>
     </head>
     <body>
-        <h1>分析ダッシュボード</h1>
+        <h1>月別分析ダッシュボード</h1>
         <div class="month-selector">
             <button id="prevMonthButton"></button>
             <span id="selectedMonth"></span>

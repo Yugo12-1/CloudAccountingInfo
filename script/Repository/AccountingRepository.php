@@ -221,7 +221,6 @@ class AccountingRepository {
             'PayKind',
             'StartDate', 
             'EndDate',
-            'SelectedYear',
             'Nyugai'
         ];
         
@@ -230,13 +229,6 @@ class AccountingRepository {
             
             // 許可されていないキーは無視する
             if (!in_array($key, $allowdKeys, true)) {
-                continue;
-            }
-            
-            // 年別検索の場合(例: '2026' -> '2026%')
-            if ($key === 'SelectedYear') {
-                $whereClauses[] = "YMD LIKE :SelectedYear";
-                $params[':SelectedYear'] = $val . '%';
                 continue;
             }
             

@@ -21,17 +21,17 @@ class AnalysisService {
         int $month
     ) : array {
 
-    $startDate = sprintf(
-        '%04d-%02d-01',
-        $year,
-        $month
-    );
+        $startDate = sprintf(
+            '%04d-%02d-01',
+            $year,
+            $month
+        );
 
-    $startDateObj = new DateTimeImmutable($startDate);
+        $startDateObj = new DateTimeImmutable($startDate);
 
-    $endDate = $startDateObj
-        ->modify('+1 month')
-        ->format('Y-m-d');
+        $endDate = $startDateObj
+            ->modify('+1 month')
+            ->format('Y-m-d');
     
         return [
             'PayKind' => $this->gfGetPayKindCounts($startDate, $endDate),

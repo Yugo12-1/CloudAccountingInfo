@@ -103,43 +103,113 @@ $conditions = [];
 /*
  * ここから検索条件の各項目の設定
  */
-$startDate = $_GET['startDate'] ?? date('Y-m-d');
-$endDate =$_GET['endDate'] ?? date('Y-m-d');
 
-$isValidStartDate = false;
-$isValidEndDate = false;
+// 日別・月別の検索モードを変化される
+$mode = $_GET['mode'] ?? 'day';
+$targetDate = $_GET['date'] ?? date('Y-m-d');
 
-// 開始日のバリデーションチェック
-if (!empty($startDate)) {
-    $d = DateTime::createFromFormat('Y-m-d', $startDate);
-    if ($d && $d->format('Y-m-d') === $startDate) {
-        $isValidStartDate = true;
+$isValidTargetDate = false;
+
+// ターゲット日のバリデーションチェック
+if (!empty($targetDate)) {
+
+    $d = DateTime::createFromFormat('Y-m-d', $targetDate);
+
+    if ($d && $d->format('Y-m-d') === $targetDate) {
+        $isValidTargetDate = true;
     }
 }
 
-if (!$isValidStartDate) {
-    $startDate = '';
+// 不正な値なら今日日付に強制変更
+if (!$isValidTargetDate) {
+    $targetDate = date('Y-m-d');
 }
 
 
-// 終了日のバリデーションチェック
-if (!empty($endDate)) {
-    $d = DateTime::createFromFormat('Y-m-d', $endDate);
-    if ($d && $d->format('Y-m-d') === $endDate) {
-        $isValidEndDate = true;
+// 基準日をずらすことで前日・前月、翌日・次月のデータを表示す
+$nav = $_GET['nav'] ?? '';
+
+if ($nav === 'prev') {
+    // 前日もしくは前月に$targetDateをずらせばいい？
+    if ($mode === 'day') {
+        $targetDate = date(
+            'Y-m-d',
+            strtotime($targetDate . ' -1 day')
+        );
+
+    } elseif ($mode === 'month') {
+        $targetDate = date(
+            'Y-m-01',
+            strtotime($targetDate)
+        );
+
+        $targetDate = date(
+            'Y-m-d',
+            strtotime($targetDate . ' -1 month')
+        );
+    }
+
+} elseif ($nav === 'next') {
+    if ($mode === 'day') {
+        $targetDate = date(
+            'Y-m-d',
+            strtotime($targetDate . ' +1 day')
+        );
+
+    } elseif ($mode === 'month') {
+        $targetDate = date(
+            'Y-m-01',
+            strtotime($targetDate)
+        );
+
+        $targetDate = date(
+            'Y-m-d',
+            strtotime($targetDate . ' +1 month')
+        );
     }
 }
 
-if (!$isValidEndDate) {
-    $endDate = '';
+
+/*
+ * モードに応じた、開始日と終了日を作る
+ */
+if ($mode === 'day') {
+
+    $startDate = $targetDate;
+    $endDate = $targetDate;
+
+} elseif ($mode === 'month') {
+
+    $startDate = date(
+        'Y-m-01',
+        strtotime($targetDate)
+    );
+
+    $endDate = date(
+        'Y-m-t',
+        strtotime($targetDate)
+    );
+
+} else {
+    // 不正なmodeを直接入力されたケースは日別に戻す
+    $mode = 'day';
+    
+    $startDate = $targetDate;
+    $endDate = $targetDate;
 }
 
 
-// 年別のバリデーションチェック
-$selectedYear = $_GET['selectedYear'] ?? '';
-
-if (!preg_match('/^\d{4}$/', $selectedYear)) {
-    $selectedYear = '';
+// 表示用
+if ($mode === 'day') {
+    $displayDate = date(
+        'Y/m/d',
+        strtotime($targetDate)
+    );
+} else {
+    $displayDate = date(
+        'Y年m月',
+        strtotime($targetDate)
+    );
 }
 
 // 決済種別
@@ -148,13 +218,13 @@ $selectedPayKind = $_GET['payKind'] ?? '';
 // 入外区分
 $selectedNyugai = $_GET['nyugai'] ?? '';
 
+
 // 検索条件の格納 (レポジトリのキーに合わせる)
 $conditions = [
     'StartDate' => $startDate,
-    'EndDate' => $endDate,
-    'SelectedYear' => $selectedYear,
-    'PayKind' => $selectedPayKind,
-    'Nyugai' => $selectedNyugai
+    'EndDate'   => $endDate,
+    'PayKind'   => $selectedPayKind,
+    'Nyugai'    => $selectedNyugai
 ];
 
 /*
@@ -201,41 +271,53 @@ $totalGokei = 0;
                             <h2>検索条件</h2>
                         </div>
                         <form method="GET" class="search-form">
-                            <!-- 年での絞り込み -->
-                            <div class="search-item">
-                                <label for="selectedYear">年</label>
-                                <select id="selectedYear" name="selectedYear">
-                                <option value="">すべて</option>
-                                <?php 
-                                    $currentYear = (int)date('Y');
-                                    // 過去3年分のデータを選択条件に表示する
-                                    for ($y = $currentYear; $y >= $currentYear - 3; $y--) {
-                                        $selected = ($selectedYear === (string)$y) ? 'selected' : '';
-                                        echo "<option value=\"{$y}\" {$selected}>{$y}年</option>";
-                                    }
-                                ?>
-                                </select>
+                            <button type="submit" name="nav" value="prev">
+                                <
+                            </button>
+                            <div class="current-date">
+                                <span class="calendar-icon">📅</span>
+                                <span>
+                                    <?php echo htmlspecialchars(
+                                        $displayDate,
+                                        ENT_QUOTES | ENT_SUBSTITUTE,
+                                        'UTF-8'
+                                    ); ?>
+                                </span>
                             </div>
-                            <!-- 開始日、終了日での絞り込み -->
-                            <div class="search-item search-date">
-                                <label for="startDate">期間</label>
-                                <div class="date-inputs">
-                                    <input
-                                    type="date"
-                                    id="startDate"
-                                    name="startDate"
-                                    value="<?php echo htmlspecialchars($startDate); ?>"
-                                    >
-                                    <span>～</span>
-                                    <input
-                                    type="date"
-                                    id="endDate"
-                                    name="endDate"
-                                    value="<?php echo htmlspecialchars($endDate); ?>"
-                                    >
-                                </div>
-                            </div>
+                            <button type="submit" name="nav" value="next">
+                                >
+                            </button>
+                            <input 
+                                type="hidden"
+                                name="date"
+                                value="<?php echo htmlspecialchars(
+                                    $targetDate,
+                                    ENT_QUOTES | ENT_SUBSTITUTE,
+                                    'UTF-8'
+                                ); ?>"
+                            >
                             <!-- 決済種別での絞り込み -->
+                            <div class="search-item">
+                                <span>表示単位</span>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="mode"
+                                        value="day"
+                                        <?php echo ($mode === 'day') ? 'checked' : '' ?>
+                                    >
+                                    日別
+                                </label>
+                                <label>
+                                    <input
+                                        type="radio"
+                                        name="mode"
+                                        value="month"
+                                        <?php echo ($mode === 'month') ? 'checked' : ''?>
+                                    >
+                                    月別
+                                </label>
+                            </div>
                             <div class="search-item">
                                 <label for="payKind">決済種別</label>
                                 <select id="payKind" name="payKind">
