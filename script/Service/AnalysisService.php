@@ -1,11 +1,39 @@
 <?php
 
+$parentDir = dirname(__DIR__);
+
+require_once $parentDir . '/Support/LogManager.php';
+require_once $parentDir . '/Authentication/AuthenticationManager.php';
+require_once $parentDir . '/Repository/AccountingRepository.php';
+
+
 class AnalysisService {
     
+    private LogManager $pLogger; 
+    private AuthenticationManager $pAuthenticator;
     private AccountingRepository $pAccountingRepository;
+    private string $pHospitalID;
 
-    public function __construct(AccountingRepository $repository) {
+    
+    public function __construct(
+        LogManager $logger,
+        AuthenticationManager $authenticator,
+        AccountingRepository $repository,
+        string $hospitalID
+    ) {
+        $this->pLogger = $logger;
+        $this->pAuthenticator = $authenticator;
         $this->pAccountingRepository = $repository;
+        $this->pHospitalID = $hospitalID;
+    }
+
+
+    /**
+     * ログイン済みかどうかをAuthenticatorに依頼する
+     * @return bool
+     */
+    public function gfIsLogin() : bool {
+        return $this->pAuthenticator->gfIsAuthenticated();   
     }
 
     

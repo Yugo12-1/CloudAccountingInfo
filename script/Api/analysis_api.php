@@ -32,6 +32,7 @@ $scriptDir = dirname(__DIR__);
 require_once $scriptDir . '/Support/HospitalResolver.php';
 require_once $scriptDir . '/Support/LogManager.php';
 require_once $scriptDir . '/DBManager/DBConnection.php';
+require_once $scriptDir . '/Authentication/AuthenticationManager.php';
 require_once $scriptDir . '/Repository/AccountingRepository.php';
 require_once $scriptDir . '/Service/AnalysisService.php';
 require_once $scriptDir . '/Controller/AnalysisController.php';
@@ -56,13 +57,20 @@ $logger = new LogManager($logRootDir);
 
 $dbConnect = new DBConnection($hospitalContext);
 
+$authenticator = new AuthenticationManager($logger);
+
 $accountingRepository = new AccountingRepository(
     $logger,
     $dbConnect,
     $hospitalContext->gfGetHospitalID()
 );
 
-$analysisService = new AnalysisService($accountingRepository);
+$analysisService = new AnalysisService(
+    $logger,
+    $authenticator,
+    $accountingRepository,
+    $hospitalContext->gfGetHospitalID()
+);
 
 $analysisController = new AnalysisController($analysisService);
 

@@ -9,6 +9,23 @@ class AnalysisController {
     }
 
 
+    /**
+     * ログイン済みかどうかをサービスに依頼する
+     * @return bool
+     */
+    public function gfIsLogin() : bool {
+        return $this->pAnalysisService->gfIsLogin();
+    }
+
+    
+    /**
+     * ログインページへ強制的に移動
+     */
+    public function gfGoToLoginPage() : void {
+        header("Location: login.php");
+        exit();
+    }
+
 
     /**
      * ダッシュボード全体の情報を取得

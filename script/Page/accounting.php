@@ -129,7 +129,10 @@ if (!$isValidTargetDate) {
 // 基準日をずらすことで前日・前月、翌日・次月のデータを表示す
 $nav = $_GET['nav'] ?? '';
 
-if ($nav === 'prev') {
+if ($nav === 'today') {
+    $targetDate = date('Y-m-d');
+
+} elseif ($nav === 'prev') {
     // 前日もしくは前月に$targetDateをずらせばいい？
     if ($mode === 'day') {
         $targetDate = date(
@@ -246,6 +249,7 @@ $totalGokei = 0;
         <meta name="viewport" content="width=device-width" />
         <title>会計情報一覧</title>
         <link rel="stylesheet" href="../css/accounting.css">
+        <script src="../js/accounting.js" defer></script>
     </head>
     <body>
         <header class="site-header">
@@ -264,6 +268,7 @@ $totalGokei = 0;
                             'UTF-8'
                         ); ?>
                     </p>
+                    <a href="./analysis.php" class="dashboard-link">分析ダッシュボードを見る</a>
                 </div>
                 <div class="accounting-container">
                     <div class="search-panel">
@@ -271,32 +276,50 @@ $totalGokei = 0;
                             <h2>検索条件</h2>
                         </div>
                         <form method="GET" class="search-form">
-                            <button type="submit" name="nav" value="prev">
-                                <
-                            </button>
-                            <div class="current-date">
-                                <span class="calendar-icon">📅</span>
-                                <span>
+                            <div class="date-controls">
+                                <button type="submit" name="nav" value="today" class="today-button">今日</button>
+                                <div class="current-date">
+                                    <button type="submit" name="nav" value="prev">
+                                        <<
+                                    </button>
+                                    <button
+                                        type="button"
+                                        id="calendarButton"
+                                        class="calendar-button"
+                                        aria-label="日付を選択"
+                                    >
+                                        📅
+                                    </button>
+                                    <span>
                                     <?php echo htmlspecialchars(
                                         $displayDate,
                                         ENT_QUOTES | ENT_SUBSTITUTE,
                                         'UTF-8'
                                     ); ?>
-                                </span>
+                                    </span>
+                                    <input
+                                        type="date"
+                                        id="calendarInput"
+                                        value="<?php echo htmlspecialchars(
+                                            $targetDate,
+                                            ENT_QUOTES | ENT_SUBSTITUTE,
+                                            'UTF-8'
+                                        );?>"
+                                    >
+                                    <button type="submit" name="nav" value="next">
+                                        >>
+                                    </button>
+                                    <input 
+                                        type="hidden"
+                                        name="date"
+                                        value="<?php echo htmlspecialchars(
+                                            $targetDate,
+                                            ENT_QUOTES | ENT_SUBSTITUTE,
+                                            'UTF-8'
+                                        ); ?>"
+                                    >
+                                </div>
                             </div>
-                            <button type="submit" name="nav" value="next">
-                                >
-                            </button>
-                            <input 
-                                type="hidden"
-                                name="date"
-                                value="<?php echo htmlspecialchars(
-                                    $targetDate,
-                                    ENT_QUOTES | ENT_SUBSTITUTE,
-                                    'UTF-8'
-                                ); ?>"
-                            >
-                            <!-- 決済種別での絞り込み -->
                             <div class="search-item">
                                 <span>表示単位</span>
                                 <label>
@@ -319,6 +342,7 @@ $totalGokei = 0;
                                 </label>
                             </div>
                             <div class="search-item">
+                                <!-- 決済種別での絞り込み -->
                                 <label for="payKind">決済種別</label>
                                 <select id="payKind" name="payKind">
                                     <option value="">すべて</option>
@@ -357,8 +381,6 @@ $totalGokei = 0;
                             </div>
                             <div class="search-buttons">
                                 <button type="submit">検 索</button>
-                                <!-- $_SERVER['PHP_SELF'] は 今実行しているPHPファイルのパスを取得 -->
-                                <a href="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>">条件をクリア</a>
                             </div>
                         </form>
                         <div class="result-count">
@@ -412,7 +434,7 @@ $totalGokei = 0;
                                 <?php endif; ?>
                             </tbody>
                         </table>
-                        <form method="POST" action="logout.php" class="logout-form">
+                        <form method="POST" action="logout.php" class="logout-form" id="logoutForm">
                             <button type="submit">ログアウト</button>
                         </form>
                 </div><!-- accounting-container -->
